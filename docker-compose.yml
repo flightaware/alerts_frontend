@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  alerts-frontend:
+#    image: "ghcr.io/flightaware/alerts_frontend/alerts-frontend:${ALERTS_VERSION:-latest}"
+    image: "docker-registry.flightaware.com/alerts_frontend:${ALERTS_VERSION:-latest}"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      # Port upon which to serve webapp
+      - "${WEB_SERVER_PORT:-8080}:80"
+    networks:
+      - internal
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10mb"
+        max-file: "5"
+
+networks:
+  internal:
