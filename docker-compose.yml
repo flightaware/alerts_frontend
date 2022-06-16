@@ -2,8 +2,7 @@ version: '3.7'
 
 services:
   alerts-frontend:
-#    image: "ghcr.io/flightaware/alerts_frontend/alerts-frontend:${ALERTS_VERSION:-latest}"
-    image: "docker-registry.flightaware.com/alerts_frontend:${ALERTS_VERSION:-latest}"
+    image: "ghcr.io/flightaware/alerts_frontend/alerts-frontend:${ALERTS_VERSION:-latest}"
     build:
       context: .
       dockerfile: Dockerfile
