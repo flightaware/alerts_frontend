@@ -32,7 +32,7 @@ jobs:
           # Strip git ref prefix from version
           ALERTS_VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           # Use Docker `latest` tag convention
-          [ "$ALERTS_VERSION" == "master" ] && ALERTS_VERSION=latest
+          [ "$ALERTS_VERSION" == "main" ] && ALERTS_VERSION=latest
           echo "ALERTS_VERSION=$ALERTS_VERSION" >> $GITHUB_ENV
           docker-compose build $ALERTS_IMAGE_NAME
       - name: Log into registry
