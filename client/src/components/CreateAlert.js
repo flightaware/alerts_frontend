@@ -13,8 +13,8 @@ export default class CreateAlert extends Component {
             origin: '',
             destination: '',
             aircraft_type: null,
-            start: new Date(),
-            end: new Date()
+            start_date: new Date(),
+            end_date: new Date()
         }
     }
 
@@ -35,11 +35,11 @@ export default class CreateAlert extends Component {
     }
 
     handleStartChange = (date) => {
-        this.setState({start: date});
+        this.setState({start_date: date});
     }
 
     handleEndChange = (date) => {
-        this.setState({end: date});
+        this.setState({end_date: date});
     }
 
     handleSubmit = (event) => {
@@ -57,8 +57,8 @@ export default class CreateAlert extends Component {
             origin: this.state.origin,
             destination: this.state.destination,
             aircraft_type: this.state.aircraft_type,
-            start: this.state.start.toISOString().split('T')[0],
-            end: this.state.end.toISOString().split('T')[0],
+            start_date: this.state.start_date.toISOString().split('T')[0],
+            end_date: this.state.end_date.toISOString().split('T')[0],
         };
         axios.post('/api/create', JSON.stringify(processed_data),
         ).then(response => {
@@ -95,12 +95,12 @@ export default class CreateAlert extends Component {
                         </label>
                         <label>
                             Start Date:
-                            <DatePicker dateFormat="yyyy/MM/dd" selected={this.state.start}
+                            <DatePicker dateFormat="yyyy/MM/dd" selected={this.state.start_date}
                                         onChange={this.handleStartChange}/>
                         </label>
                         <label>
                             End Date:
-                            <DatePicker dateFormat="yyyy/MM/dd" selected={this.state.end}
+                            <DatePicker dateFormat="yyyy/MM/dd" selected={this.state.end_date}
                                         onChange={this.handleEndChange}/>
                         </label>
                         <br/>
