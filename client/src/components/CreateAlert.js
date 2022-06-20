@@ -35,11 +35,21 @@ export default class CreateAlert extends Component {
     }
 
     handleStartChange = (date) => {
-        this.setState({start_date: date});
+        if (date.getTime() > this.state.end_date.getTime()) {
+            alert("Cannot have start date later than end date");
+            this.setState({start_date: this.state.end_date});
+        } else {
+            this.setState({start_date: date});
+        }
     }
 
     handleEndChange = (date) => {
-        this.setState({end_date: date});
+        if (date.getTime() < this.state.start_date.getTime()) {
+            alert("Cannot have end date earlier than start date");
+            this.setState({end_date: this.state.start_date});
+        } else {
+            this.setState({end_date: date});
+        }
     }
 
     handleSubmit = (event) => {
