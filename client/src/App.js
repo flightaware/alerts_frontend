@@ -1,6 +1,7 @@
 import React from 'react';
 import LandingPage from './components/LandingPage/LandingPage';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import AppNavbar from './components/AppNavbar';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 
@@ -30,6 +31,7 @@ const App = () => {
         <ThemeProvider theme={tableTheme}>
             <Router>
                 <div className="app">
+                    <AppNavbar/>
                     <Switch>
                         <Route path={`/`} component={LandingPage} exact />
                     </Switch>
