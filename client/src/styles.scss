@@ -377,3 +377,13 @@ a {
         color: $midnight-blue;
     }
 }
+
+// Extra styles for Alerts
+.error-text {
+    max-width: 350px;
+    color: $red;
+}
+
+.text-muted {
+    max-width: 350px;
+}

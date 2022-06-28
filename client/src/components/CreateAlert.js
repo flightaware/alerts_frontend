@@ -12,13 +12,15 @@ export default class CreateAlert extends Component {
             response: '',
             buttonDisabled: false,
             dateValid: true,
+            startDateTodayValid: true,
+            endDateTodayValid: true,
             etaValid: true,
             ident: '',
             origin: '',
             destination: '',
-            aircraftType: null,
-            start: new Date(),
-            end: new Date(),
+            aircraftType: '',
+            start: '',
+            end: '',
             events: {
                 arrival: false,
                 cancelled: false,
@@ -48,24 +50,58 @@ export default class CreateAlert extends Component {
     }
 
     handleStartChange = (date) => {
-        this.setState({start: date})
-        if (date.getTime() > this.state.end.getTime()) {
-            this.setState({buttonDisabled: true});
-            this.setState({dateValid: false});
+        this.setState({start: date});
+        // check if date null
+        if (date) {
+            if (this.state.end) {
+                // check if end date null to avoid getting time
+                if (date.getTime() > this.state.end.getTime()) {
+                    this.setState({buttonDisabled: true});
+                    this.setState({dateValid: false});
+                } else {
+                    this.setState({buttonDisabled: false});
+                    this.setState({dateValid: true});
+                }
+            }
+            // check if date is before today: if it is, API will reject
+            if (date.getTime() < (new Date()).getTime()) {
+                this.setState({startDateTodayValid: false});
+            } else {
+                this.setState({startDateTodayValid: true});
+            }
         } else {
+            // since start date is null, everything is valid
             this.setState({buttonDisabled: false});
             this.setState({dateValid: true});
+            this.setState({startDateTodayValid: true});
         }
     }
 
     handleEndChange = (date) => {
-        this.setState({end: date})
-        if (date.getTime() < this.state.start.getTime()) {
-            this.setState({buttonDisabled: true});
-            this.setState({dateValid: false});
+        this.setState({end: date});
+        // check if date null
+        if (date) {
+            // check if start date null to avoid getting time
+            if (this.state.start) {
+                if (date.getTime() < this.state.start.getTime()) {
+                    this.setState({buttonDisabled: true});
+                    this.setState({dateValid: false});
+                } else {
+                    this.setState({buttonDisabled: false});
+                    this.setState({dateValid: true});
+                }
+            }
+            // check if date is before today: if it is, API will reject
+            if (date.getTime() < (new Date()).getTime()) {
+                this.setState({endDateTodayValid: false});
+            } else {
+                this.setState({endDateTodayValid: true});
+            }
         } else {
+            // since end date is null, everything is valid
             this.setState({buttonDisabled: false});
             this.setState({dateValid: true});
+            this.setState({endDateTodayValid: true});
         }
     }
 
@@ -115,22 +151,14 @@ export default class CreateAlert extends Component {
     }
 
     handleSubmit = (event) => {
-        alert('Submitted form');
         event.preventDefault();
-        // const test_data = {
-        //     origin: "ORD",
-        //     destination: "GRB",
-        //     start: "2022-06-20",
-        //     end: "2022-06-25",
-        //     ident: "N763CC",
-        // };
         const processedData = {
             ident: this.state.ident,
             origin: this.state.origin,
             destination: this.state.destination,
             aircraft_type: this.state.aircraftType,
-            start: this.state.start.toISOString().split('T')[0],
-            end: this.state.end.toISOString().split('T')[0],
+            start: !this.state.start ? '' : this.state.start.toISOString().split('T')[0],
+            end: !this.state.end ? '' : this.state.end.toISOString().split('T')[0],
             events: this.state.events,
             eta: parseInt(this.state.eta),
             max_weekly: parseInt(this.state.max_weekly),
@@ -183,20 +211,26 @@ export default class CreateAlert extends Component {
                             <label className="col-form-label">Start Date:</label>
                             <DatePicker dateFormat="yyyy/MM/dd" selected={this.state.start}
                                         onChange={this.handleStartChange}/>
-                            {!this.state.dateValid && <div className="form-text" style={{color: "red"}}>
-                                Dates are invalid, disabling button
+                            {!this.state.dateValid && <div className="form-text error-text">
+                                Start Date cannot be after End Date
+                            </div>}
+                            {!this.state.startDateTodayValid && <div className="form-text text-muted">
+                                Warning: API will reject the request because the Start Date is before today's date.
                             </div>}
                         </div>
                         <div className="form-group">
                             <label className="col-form-label">End Date:</label>
                             <DatePicker dateFormat="yyyy/MM/dd" selected={this.state.end}
                                         onChange={this.handleEndChange}/>
-                            {!this.state.dateValid && <div className="form-text" style={{color: "red"}}>
-                                Dates are invalid, disabling button
+                            {!this.state.dateValid && <div className="form-text error-text">
+                                Start Date cannot be after End Date
+                            </div>}
+                            {!this.state.endDateTodayValid && <div className="form-text text-muted">
+                                Warning: API will reject the request because the End Date is before today's date.
                             </div>}
                         </div>
                         <div className="form-group row">
-                            <div className="col-sm-2">Events</div>
+                            <div className="col-sm-2">Events:</div>
                             <div className="col-sm-10">
                                 <div className="form-check">
                                     <input
@@ -250,7 +284,7 @@ export default class CreateAlert extends Component {
                                 ETA (Minutes before flight's ETA to be delivered):</label>
                             <input type="number" className="form-control" value={this.state.eta}
                                    onChange={this.handleETAChange}/>
-                            {!this.state.etaValid && <div className="form-text" style={{color: "red"}}>
+                            {!this.state.etaValid && <div className="form-text error-text">
                                 ETA value must be a multiple of 15 (0 to disable), disabling button until it is
                                 changed
                             </div>}
