@@ -64,7 +64,9 @@ export default class CreateAlert extends Component {
                 }
             }
             // check if date is before today: if it is, API will reject
-            if (date.getTime() < (new Date()).getTime()) {
+            let today = new Date();
+            today.setHours(0,0,0,0);
+            if (date.getTime() < today.getTime()) {
                 this.setState({startDateTodayValid: false});
             } else {
                 this.setState({startDateTodayValid: true});
@@ -92,7 +94,9 @@ export default class CreateAlert extends Component {
                 }
             }
             // check if date is before today: if it is, API will reject
-            if (date.getTime() < (new Date()).getTime()) {
+            let today = new Date();
+            today.setHours(0,0,0,0);
+            if (date.getTime() < today.getTime()) {
                 this.setState({endDateTodayValid: false});
             } else {
                 this.setState({endDateTodayValid: true});
