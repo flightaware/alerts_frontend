@@ -75,11 +75,11 @@ export default class AlertConfigsTablePage extends Component {
                                     /* Note: start/end date use the same variable format
                                      as SQL date column name for consistency */
                                     {
-                                        title: "Start Date",
+                                        title: "Start Date (M/D/Y)",
                                         field: "start_date",
                                     },
                                     {
-                                        title: "End Date",
+                                        title: "End Date (M/D/Y)",
                                         field: "end_date",
                                     },
                                     {
@@ -118,8 +118,8 @@ export default class AlertConfigsTablePage extends Component {
                                         origin: alert.origin,
                                         destination: alert.destination,
                                         aircraft_type: alert.aircraft_type,
-                                        start_date: alert.start_date,
-                                        end_date: alert.end_date,
+                                        start_date: (new Date(alert.end_date)).toLocaleDateString(),
+                                        end_date: (new Date(alert.end_date)).toLocaleDateString(),
                                         max_weekly: alert.max_weekly,
                                         eta: alert.eta,
                                         arrival: alert.arrival,
