@@ -3,7 +3,7 @@ import LandingPage from './components/LandingPage/LandingPage';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AppNavbar from './components/AppNavbar';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import AlertConfigsTable from "./components/AlertConfigsTable";
+import AlertConfigsTablePage from "./components/AlertConfigsTablePage";
 
 
 const App = () => {
@@ -35,7 +35,7 @@ const App = () => {
                     <AppNavbar/>
                     <Switch>
                         <Route path={`/`} component={LandingPage} exact />
-                        <Route path={`/alert_configs`} component={AlertConfigsTable} exact />
+                        <Route path={`/alert_configs`} component={AlertConfigsTablePage} exact />
                     </Switch>
                 </div>
             </Router>
