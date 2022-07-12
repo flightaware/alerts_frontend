@@ -122,11 +122,11 @@ export default class AlertConfigsTablePage extends Component {
                                         end_date: (new Date(alert.end_date)).toLocaleDateString(),
                                         max_weekly: alert.max_weekly,
                                         eta: alert.eta,
-                                        arrival: alert.arrival,
-                                        cancelled: alert.cancelled,
-                                        departure: alert.departure,
-                                        diverted: alert.diverted,
-                                        filed: alert.filed
+                                        arrival: (alert.arrival ? '✔' : '✖'),
+                                        cancelled: (alert.cancelled ? '✔' : '✖'),
+                                        departure: (alert.departure ? '✔' : '✖'),
+                                        diverted: (alert.diverted ? '✔' : '✖'),
+                                        filed: (alert.filed ? '✔' : '✖')
                                     }
                                 ))}
                             />
