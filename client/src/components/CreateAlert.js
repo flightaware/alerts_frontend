@@ -303,8 +303,7 @@ export default class CreateAlert extends Component {
                             </div>}
                         </div>
                         <br/>
-                        <button type="submit" value="Create Alert" className="btn btn-primary"
-                                style={{backgroundColor: "#00a0e2"}}
+                        <button type="submit" value="Create Alert" className="btn submit-button"
                                 disabled={this.state.buttonDisabled}>Submit
                         </button>
                     </form>
