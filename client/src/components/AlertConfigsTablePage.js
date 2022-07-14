@@ -118,7 +118,7 @@ export default class AlertConfigsTablePage extends Component {
                                         origin: alert.origin,
                                         destination: alert.destination,
                                         aircraft_type: alert.aircraft_type,
-                                        start_date: (new Date(alert.end_date)).toLocaleDateString(),
+                                        start_date: (new Date(alert.start_date)).toLocaleDateString(),
                                         end_date: (new Date(alert.end_date)).toLocaleDateString(),
                                         max_weekly: alert.max_weekly,
                                         eta: alert.eta,
