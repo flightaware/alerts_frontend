@@ -9,7 +9,8 @@ export default class AlertConfigsTablePage extends Component {
 
         this.state = {
             data: [],
-            loading: true
+            loading: true,
+            response: null
         }
     }
 
@@ -25,6 +26,24 @@ export default class AlertConfigsTablePage extends Component {
                     loading: false
                 });
             });
+    }
+
+    deleteAlertId(fa_alert_id) {
+        let processedData = {'fa_alert_id': fa_alert_id};
+        axios.post('/api/delete', JSON.stringify(processedData), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        ).then(response => {
+            console.log("Sent JSON payload to backend successfully: " + response.data);
+            this.setState({response: response.data["Description"]});
+            // Refresh data in table
+            this.fetchData();
+        }).catch(error => {
+            console.error("Error occurred in sending JSON payload to backend: " + error);
+            this.setState({response: error.data["Description"]});
+        });
     }
 
     render() {
@@ -50,6 +69,15 @@ export default class AlertConfigsTablePage extends Component {
                                         fontFamily: 'Helvetica-Light',
                                         padding: '10px',
                                     },
+                                }}
+                                editable={{
+                                    onRowDelete: oldData =>
+                                        new Promise((resolve, reject) => {
+                                            setTimeout(() => {
+                                                this.deleteAlertId(oldData['fa_alert_id']);
+                                                resolve();
+                                            }, 1000);
+                                        })
                                 }}
                                 columns={[
                                     {
