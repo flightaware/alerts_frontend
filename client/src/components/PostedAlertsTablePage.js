@@ -98,7 +98,7 @@ export default class PostedAlertsTablePage extends Component {
                                     },
                                     {
                                         title: "Origin",
-                                        field: "Origin",
+                                        field: "origin",
                                     },
                                     {
                                         title: "Destination",
