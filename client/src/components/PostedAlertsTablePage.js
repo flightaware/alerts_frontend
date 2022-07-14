@@ -57,7 +57,7 @@ export default class PostedAlertsTablePage extends Component {
                                         field: "id",
                                     },
                                     {
-                                        title: "Time Alert Was Received (UTC)",
+                                        title: "Time Alert Was Received (UTC/GMT)",
                                         field: "time_alert_received",
                                     },
                                     {
