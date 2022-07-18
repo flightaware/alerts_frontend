@@ -46,6 +46,12 @@ export default class AlertConfigsTablePage extends Component {
         });
     }
 
+    deleteAllAlerts = () => {
+        for (const alert_config of this.state.data) {
+            this.deleteAlertId(alert_config["fa_alert_id"]);
+        }
+    }
+
     render() {
         const {data, loading} = this.state;
 
@@ -164,6 +170,11 @@ export default class AlertConfigsTablePage extends Component {
                             </div>
                         }
                     </div>
+                </div>
+                <div className="alert-config-delete-all-alerts-wrapper">
+                    <button onClick={this.deleteAllAlerts} value="Delete All Alerts" className="btn submit-button">
+                        Delete All Alerts
+                    </button>
                 </div>
             </div>
         )
