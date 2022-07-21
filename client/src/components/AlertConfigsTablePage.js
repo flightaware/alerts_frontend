@@ -56,10 +56,19 @@ export default class AlertConfigsTablePage extends Component {
 
     deleteAllAlerts = () => {
         // Loop through all alerts and delete
-        this.setState({response: ''});
-        for (const alert_config of this.state.data) {
-            this.deleteAlertId(alert_config["fa_alert_id"]);
-        }
+        this.setState({response: ''}, () => {
+            for (const alert_config of this.state.data) {
+                if (alert_config['is_from_app'] === true) {
+                    this.deleteAlertId(alert_config["fa_alert_id"]);
+                } else {
+                    let holder = this.state.response;
+                    holder += "FRONT-END ERROR: This is an alert that was not " +
+                        "created in the app, you cannot delete it through here. Please delete " +
+                        "it through a DELETE request.\n";
+                    this.setState({response: holder});
+                }
+            }
+        });
     }
 
     render() {
@@ -81,8 +90,17 @@ export default class AlertConfigsTablePage extends Component {
                         editable={{
                             onRowDelete: oldData => new Promise((resolve, reject) => {
                                 setTimeout(() => {
-                                    this.setState({response: ''});
-                                    this.deleteAlertId(oldData['fa_alert_id']);
+                                    this.setState({response: ''}, () => {
+                                        if (oldData['is_from_app'] === '✔') {
+                                            this.deleteAlertId(oldData['fa_alert_id']);
+                                        } else {
+                                            this.setState({
+                                                response: "FRONT-END ERROR: This is an alert that was not " +
+                                                    "created in the app, you cannot delete it through here. Please delete " +
+                                                    "it through a DELETE request."
+                                            });
+                                        }
+                                    });
 
                                     resolve();
                                 }, 1000);
@@ -98,7 +116,8 @@ export default class AlertConfigsTablePage extends Component {
                             title: "Destination", field: "destination",
                         }, {
                             title: "Aircraft Type", field: "aircraft_type",
-                        }, /* Note: start/end date use the same variable format
+                        },
+                            /* Note: start/end date use the same variable format
                                      as SQL date column name for consistency */
                             {
                                 title: "Start Date (M/D/Y)", field: "start_date",
@@ -118,6 +137,8 @@ export default class AlertConfigsTablePage extends Component {
                                 title: "Diverted", field: "diverted",
                             }, {
                                 title: "Filed", field: "filed",
+                            }, {
+                                title: "Alert Created Using Webapp?", field: "is_from_app",
                             }]}
                         data={data.map(alert => ({
                             fa_alert_id: alert.fa_alert_id,
@@ -125,15 +146,16 @@ export default class AlertConfigsTablePage extends Component {
                             origin: alert.origin,
                             destination: alert.destination,
                             aircraft_type: alert.aircraft_type,
-                            start_date: (new Date(alert.start_date)).toLocaleDateString('en-US', {timeZone: 'UTC'}),
-                            end_date: (new Date(alert.end_date)).toLocaleDateString('en-US', {timeZone: 'UTC'}),
+                            start_date: alert.start_date === null ? null : (new Date(alert.start_date)).toLocaleDateString('en-US', {timeZone: 'UTC'}),
+                            end_date: alert.end_date === null ? null : (new Date(alert.end_date)).toLocaleDateString('en-US', {timeZone: 'UTC'}),
                             max_weekly: alert.max_weekly,
                             eta: alert.eta,
                             arrival: (alert.arrival ? '✔' : '✖'),
                             cancelled: (alert.cancelled ? '✔' : '✖'),
                             departure: (alert.departure ? '✔' : '✖'),
                             diverted: (alert.diverted ? '✔' : '✖'),
-                            filed: (alert.filed ? '✔' : '✖')
+                            filed: (alert.filed ? '✔' : '✖'),
+                            is_from_app: (alert.is_from_app ? '✔' : '✖')
                         }))}
                     /> : <div className="alert-config-table-spinner">
                         <Spinner animation="border" variant="primary"/>
