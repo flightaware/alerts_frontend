@@ -57,17 +57,19 @@ export default class AlertConfigsTablePage extends Component {
     deleteAllAlerts = () => {
         // Loop through all alerts and delete
         this.setState({response: ''}, () => {
+            let alert_ids_tried_to_delete = [];
             for (const alert_config of this.state.data) {
                 if (alert_config['is_from_app'] === true) {
                     this.deleteAlertId(alert_config["fa_alert_id"]);
                 } else {
-                    let holder = this.state.response;
-                    holder += "FRONT-END ERROR: This is an alert that was not " +
-                        "created in the app, you cannot delete it through here. Please delete " +
-                        "it through a DELETE request.\n";
-                    this.setState({response: holder});
+                    alert_ids_tried_to_delete.push(alert_config['fa_alert_id']);
                 }
             }
+            let holder = this.state.response;
+            this.setState({response: "FRONT-END ERROR: Alert(s) (" +
+            alert_ids_tried_to_delete + ") that was/were not " +
+            "created in the app, you cannot delete it/them through here. Please delete " +
+            "it/them through a DELETE request.\n"});
         });
     }
 
