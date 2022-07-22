@@ -54,23 +54,12 @@ export default class AlertConfigsTablePage extends Component {
         });
     }
 
-    deleteAllAlerts = () => {
-        // Loop through all alerts and delete
-        this.setState({response: ''}, () => {
-            let alert_ids_tried_to_delete = [];
-            for (const alert_config of this.state.data) {
-                if (alert_config['is_from_app'] === true) {
-                    this.deleteAlertId(alert_config["fa_alert_id"]);
-                } else {
-                    alert_ids_tried_to_delete.push(alert_config['fa_alert_id']);
-                }
-            }
-            let holder = this.state.response;
-            this.setState({response: "FRONT-END ERROR: Alert(s) (" +
-            alert_ids_tried_to_delete + ") that was/were not " +
-            "created in the app, you cannot delete it/them through here. Please delete " +
-            "it/them through a DELETE request.\n"});
-        });
+    deleteAlerts = (selected_alerts) => {
+        // Loop through selected alerts and delete
+        this.setState({response: ''});
+        for (const alert_config of selected_alerts) {
+            this.deleteAlertId(alert_config["fa_alert_id"]);
+        }
     }
 
     render() {
@@ -88,26 +77,21 @@ export default class AlertConfigsTablePage extends Component {
                             }, cellStyle: {
                                 fontFamily: 'Helvetica-Light', padding: '10px',
                             },
+                            selection: true,
+                            selectionProps: (rowData) => {
+                                rowData.tableData.disabled = rowData['is_from_app'] === '✖';
+                                return {
+                                    disabled: rowData['is_from_app'] === '✖',
+                                }
+                            }
                         }}
-                        editable={{
-                            onRowDelete: oldData => new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    this.setState({response: ''}, () => {
-                                        if (oldData['is_from_app'] === '✔') {
-                                            this.deleteAlertId(oldData['fa_alert_id']);
-                                        } else {
-                                            this.setState({
-                                                response: "FRONT-END ERROR: This is an alert that was not " +
-                                                    "created in the app, you cannot delete it through here. Please delete " +
-                                                    "it through a DELETE request."
-                                            });
-                                        }
-                                    });
-
-                                    resolve();
-                                }, 1000);
-                            })
-                        }}
+                        actions={[
+                            {
+                                tooltip: 'Remove All Selected Alerts',
+                                icon: 'delete',
+                                onClick: (evt, data) => this.deleteAlerts(data)
+                            }
+                        ]}
                         columns={[{
                             title: "FA Alert ID", field: "fa_alert_id",
                         }, {
@@ -163,11 +147,6 @@ export default class AlertConfigsTablePage extends Component {
                         <Spinner animation="border" variant="primary"/>
                     </div>}
                 </div>
-            </div>
-            <div className="alert-config-delete-all-alerts-wrapper">
-                <button onClick={this.deleteAllAlerts} value="Delete All Alerts" className="btn submit-button">
-                    Delete All Alerts
-                </button>
             </div>
             <div className="container m-2">
                 <h2>Response if deleting alerts:</h2>
