@@ -50,16 +50,23 @@ export default class AlertConfigsTablePage extends Component {
             }
         }).catch(error => {
             console.error("Error occurred in sending JSON payload to backend: " + error);
-            return error.data["Description"];
+            if (this.state.response === '') {
+                this.setState({response: error.data["Description"]});
+            } else {
+                let holder = this.state.response;
+                holder += error.data["Description"] + '\n';
+                this.setState({response: holder});
+            }
         });
     }
 
-    deleteAllAlerts = () => {
+    deleteAlerts = (selected_alerts) => {
         // Loop through all alerts and delete
-        this.setState({response: ''});
-        for (const alert_config of this.state.data) {
-            this.deleteAlertId(alert_config["fa_alert_id"]);
-        }
+        this.setState({response: ''}, () => {
+            for (const alert_config of selected_alerts) {
+                this.deleteAlertId(alert_config["fa_alert_id"]);
+            }
+        });
     }
 
     render() {
@@ -78,16 +85,13 @@ export default class AlertConfigsTablePage extends Component {
                                 fontFamily: 'Helvetica-Light', padding: '10px',
                             },
                         }}
-                        editable={{
-                            onRowDelete: oldData => new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    this.setState({response: ''});
-                                    this.deleteAlertId(oldData['fa_alert_id']);
-
-                                    resolve();
-                                }, 1000);
-                            })
-                        }}
+                        actions={[
+                            {
+                                tooltip: 'Remove All Selected Alerts',
+                                icon: 'delete',
+                                onClick: (evt, data) => this.deleteAlerts(data)
+                            }
+                        ]}
                         columns={[{
                             title: "FA Alert ID", field: "fa_alert_id",
                         }, {
@@ -139,11 +143,6 @@ export default class AlertConfigsTablePage extends Component {
                         <Spinner animation="border" variant="primary"/>
                     </div>}
                 </div>
-            </div>
-            <div className="alert-config-delete-all-alerts-wrapper">
-                <button onClick={this.deleteAllAlerts} value="Delete All Alerts" className="btn submit-button">
-                    Delete All Alerts
-                </button>
             </div>
             <div className="container m-2">
                 <h2>Response if deleting alerts:</h2>
