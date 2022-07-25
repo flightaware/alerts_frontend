@@ -50,16 +50,55 @@ export default class AlertConfigsTablePage extends Component {
             }
         }).catch(error => {
             console.error("Error occurred in sending JSON payload to backend: " + error);
-            return error.data["Description"];
+            if (this.state.response === '') {
+                this.setState({response: error.data["Description"]});
+            } else {
+                let holder = this.state.response;
+                holder += error.data["Description"] + '\n';
+                this.setState({response: holder});
+            }
         });
     }
 
     deleteAlerts = (selected_alerts) => {
         // Loop through selected alerts and delete
-        this.setState({response: ''});
-        for (const alert_config of selected_alerts) {
-            this.deleteAlertId(alert_config["fa_alert_id"]);
-        }
+        this.setState({response: ''}, () => {
+            for (const alert_config of selected_alerts) {
+                this.deleteAlertId(alert_config["fa_alert_id"]);
+            }
+        });
+    }
+
+    editAlert(new_fa_alert_data) {
+        let copy_new_fa_alert_data = {...new_fa_alert_data};
+        copy_new_fa_alert_data['start_date'] = convertToFormattedISO((new Date(copy_new_fa_alert_data['start_date'])).toISOString());
+        copy_new_fa_alert_data['end_date'] = convertToFormattedISO((new Date(copy_new_fa_alert_data['end_date'])).toISOString());
+        // Change Events Data before sending
+        copy_new_fa_alert_data['arrival'] = copy_new_fa_alert_data['arrival'] === 'True';
+        copy_new_fa_alert_data['cancelled'] = copy_new_fa_alert_data['cancelled'] === 'True';
+        copy_new_fa_alert_data['departure'] = copy_new_fa_alert_data['departure'] === 'True';
+        copy_new_fa_alert_data['diverted'] = copy_new_fa_alert_data['diverted'] === 'True';
+        copy_new_fa_alert_data['filed'] = copy_new_fa_alert_data['filed'] === 'True';
+        delete copy_new_fa_alert_data['is_from_app'];
+        axios.post('/api/modify', JSON.stringify(copy_new_fa_alert_data), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.data["Success"]) {
+                console.log("Sent JSON payload to backend successfully: " + response.data["Description"]);
+                // Refresh data in table
+                this.fetchData();
+            } else {
+                // Because only editing one alert at a time, just update response
+                console.error("Error occurred updating alert: " + response.data["Description"]);
+                // Don't refresh table - send error description
+                this.setState({response: response.data["Description"]});
+            }
+        }).catch(error => {
+            console.error("Error occurred in sending JSON payload to backend: " + error);
+            this.setState({response: error.data["Description"]});
+        });
     }
 
     render() {
@@ -79,9 +118,9 @@ export default class AlertConfigsTablePage extends Component {
                             },
                             selection: true,
                             selectionProps: (rowData) => {
-                                rowData.tableData.disabled = rowData['is_from_app'] === '✖';
+                                rowData.tableData.disabled = rowData['is_from_app'] === 'False';
                                 return {
-                                    disabled: rowData['is_from_app'] === '✖',
+                                    disabled: rowData['is_from_app'] === 'False',
                                 }
                             }
                         }}
@@ -92,8 +131,22 @@ export default class AlertConfigsTablePage extends Component {
                                 onClick: (evt, data) => this.deleteAlerts(data)
                             }
                         ]}
+                        editable={{
+                            isEditable: rowData => rowData['is_from_app'] === 'True',
+                            onRowUpdate: (newData, oldData) =>
+                                new Promise((resolve, reject) => {
+                                    setTimeout(() => {
+                                        this.setState({response: ''}, () => {
+                                            this.editAlert(newData);
+                                        });
+
+                                        resolve();
+                                    }, 1000);
+                                })
+
+                        }}
                         columns={[{
-                            title: "FA Alert ID", field: "fa_alert_id",
+                            title: "FA Alert ID", field: "fa_alert_id", editable: "never",
                         }, {
                             title: "Ident", field: "ident",
                         }, {
@@ -102,46 +155,54 @@ export default class AlertConfigsTablePage extends Component {
                             title: "Destination", field: "destination",
                         }, {
                             title: "Aircraft Type", field: "aircraft_type",
-                        },
-                            /* Note: start/end date use the same variable format
-                                     as SQL date column name for consistency */
-                            {
-                                title: "Start Date (M/D/Y)", field: "start_date",
-                            }, {
-                                title: "End Date (M/D/Y)", field: "end_date",
-                            }, {
-                                title: "Max Weekly", field: "max_weekly",
-                            }, {
-                                title: "ETA", field: "eta",
-                            }, {
-                                title: "Arrival", field: "arrival",
-                            }, {
-                                title: "Cancelled", field: "cancelled",
-                            }, {
-                                title: "Departure", field: "departure",
-                            }, {
-                                title: "Diverted", field: "diverted",
-                            }, {
-                                title: "Filed", field: "filed",
-                            }, {
-                                title: "Alert Created Using Webapp?", field: "is_from_app",
-                            }]}
+                        }, {
+                            title: "Start Date (Y-M-D)", field: "start_date", validate: (rowData) => {
+                                let holderDate = new Date(rowData['start_date']);
+                                return holderDate instanceof Date && !isNaN(holderDate.getTime()) ? true : {isValid: false, helperText: 'Invalid Date - Must be ISO8601 parseable' };
+                            }
+                        }, {
+                            title: "End Date (Y-M-D)", field: "end_date", validate: (rowData) => {
+                                let holderDate = new Date(rowData['end_date']);
+                                return holderDate instanceof Date && !isNaN(holderDate.getTime()) ? true : {isValid: false, helperText: 'Invalid Date - Must be ISO8601 parseable' };
+                            }
+                        }, {
+                            title: "Max Weekly", field: "max_weekly",
+                        }, {
+                            title: "ETA", field: "eta",
+                        }, {
+                            title: "Arrival", field: "arrival", validate: (rowData) =>
+                                rowData['arrival'] === 'True' || rowData['arrival'] === 'False' ? true : {isValid: false, helperText: 'Invalid Value - Must be True or False' }
+                        }, {
+                            title: "Cancelled", field: "cancelled", validate: (rowData) =>
+                                rowData['cancelled'] === 'True' || rowData['cancelled'] === 'False' ? true : {isValid: false, helperText: 'Invalid Value - Must be True or False' }
+                        }, {
+                            title: "Departure", field: "departure", validate: (rowData) =>
+                                rowData['departure'] === 'True' || rowData['departure'] === 'False' ? true : {isValid: false, helperText: 'Invalid Value - Must be True or False' }
+                        }, {
+                            title: "Diverted", field: "diverted", validate: (rowData) =>
+                                rowData['diverted'] === 'True' || rowData['diverted'] === 'False' ? true : {isValid: false, helperText: 'Invalid Value - Must be True or False' }
+                        }, {
+                            title: "Filed", field: "filed", validate: (rowData) =>
+                                rowData['filed'] === 'True' || rowData['filed'] === 'False' ? true : {isValid: false, helperText: 'Invalid Value - Must be True or False' }
+                        }, {
+                            title: "Alert Created Using Webapp?", field: "is_from_app", editable: "never",
+                        }]}
                         data={data.map(alert => ({
                             fa_alert_id: alert.fa_alert_id,
                             ident: alert.ident,
                             origin: alert.origin,
                             destination: alert.destination,
                             aircraft_type: alert.aircraft_type,
-                            start_date: alert.start_date === null ? null : (new Date(alert.start_date)).toLocaleDateString('en-US', {timeZone: 'UTC'}),
-                            end_date: alert.end_date === null ? null : (new Date(alert.end_date)).toLocaleDateString('en-US', {timeZone: 'UTC'}),
+                            start_date: alert.start_date === null ? null : convertToFormattedISO((new Date(alert.start_date)).toISOString()),
+                            end_date: alert.end_date === null ? null : convertToFormattedISO((new Date(alert.end_date)).toISOString()),
                             max_weekly: alert.max_weekly,
                             eta: alert.eta,
-                            arrival: (alert.arrival ? '✔' : '✖'),
-                            cancelled: (alert.cancelled ? '✔' : '✖'),
-                            departure: (alert.departure ? '✔' : '✖'),
-                            diverted: (alert.diverted ? '✔' : '✖'),
-                            filed: (alert.filed ? '✔' : '✖'),
-                            is_from_app: (alert.is_from_app ? '✔' : '✖')
+                            arrival: (alert.arrival ? 'True' : 'False'),
+                            cancelled: (alert.cancelled ? 'True' : 'False'),
+                            departure: (alert.departure ? 'True' : 'False'),
+                            diverted: (alert.diverted ? 'True' : 'False'),
+                            filed: (alert.filed ? 'True' : 'False'),
+                            is_from_app: (alert.is_from_app ? 'True' : 'False')
                         }))}
                     /> : <div className="alert-config-table-spinner">
                         <Spinner animation="border" variant="primary"/>
@@ -149,9 +210,14 @@ export default class AlertConfigsTablePage extends Component {
                 </div>
             </div>
             <div className="container m-2">
-                <h2>Response if deleting alerts:</h2>
+                <h2>Response if deleting or updating alert(s):</h2>
                 {this.state.response !== '' && this.state.response}
             </div>
         </div>)
     }
+}
+
+// Use this function to make the date "pretty" on the table by removing the time
+function convertToFormattedISO(date) {
+    return date.substring(0, date.indexOf('T'));
 }
