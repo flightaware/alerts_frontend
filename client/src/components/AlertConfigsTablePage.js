@@ -71,8 +71,8 @@ export default class AlertConfigsTablePage extends Component {
 
     editAlert(new_fa_alert_data) {
         let copy_new_fa_alert_data = {...new_fa_alert_data};
-        copy_new_fa_alert_data['start_date'] = convertToFormattedISO((new Date(copy_new_fa_alert_data['start_date'])).toISOString());
-        copy_new_fa_alert_data['end_date'] = convertToFormattedISO((new Date(copy_new_fa_alert_data['end_date'])).toISOString());
+        copy_new_fa_alert_data['start_date'] = !copy_new_fa_alert_data['start_date'] ? null : convertToFormattedISO((new Date(copy_new_fa_alert_data['start_date'])).toISOString());
+        copy_new_fa_alert_data['end_date'] = !copy_new_fa_alert_data['end_date'] ? null : convertToFormattedISO((new Date(copy_new_fa_alert_data['end_date'])).toISOString());
         // Change Events Data before sending
         copy_new_fa_alert_data['arrival'] = copy_new_fa_alert_data['arrival'] === 'True';
         copy_new_fa_alert_data['cancelled'] = copy_new_fa_alert_data['cancelled'] === 'True';
@@ -157,11 +157,13 @@ export default class AlertConfigsTablePage extends Component {
                             title: "Aircraft Type", field: "aircraft_type",
                         }, {
                             title: "Start Date (Y-M-D)", field: "start_date", validate: (rowData) => {
+                                if (!rowData['start_date']) return true;
                                 let holderDate = new Date(rowData['start_date']);
                                 return holderDate instanceof Date && !isNaN(holderDate.getTime()) ? true : {isValid: false, helperText: 'Invalid Date - Must be ISO8601 parseable' };
                             }
                         }, {
                             title: "End Date (Y-M-D)", field: "end_date", validate: (rowData) => {
+                                if (!rowData['end_date']) return true;
                                 let holderDate = new Date(rowData['end_date']);
                                 return holderDate instanceof Date && !isNaN(holderDate.getTime()) ? true : {isValid: false, helperText: 'Invalid Date - Must be ISO8601 parseable' };
                             }
@@ -185,7 +187,7 @@ export default class AlertConfigsTablePage extends Component {
                             title: "Filed", field: "filed", validate: (rowData) =>
                                 rowData['filed'] === 'True' || rowData['filed'] === 'False' ? true : {isValid: false, helperText: 'Invalid Value - Must be True or False' }
                         }, {
-                            title: "Alert Created Using Webapp?", field: "is_from_app", editable: "never",
+                            title: "Alert Created Using Webapp?", field: "is_from_app", editable: "never", headerStyle: { backgroundColor: "#66829E" }
                         }]}
                         data={data.map(alert => ({
                             fa_alert_id: alert.fa_alert_id,
