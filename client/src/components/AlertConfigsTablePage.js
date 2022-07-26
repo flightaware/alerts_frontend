@@ -84,6 +84,7 @@ export default class AlertConfigsTablePage extends Component {
                             }, cellStyle: {
                                 fontFamily: 'Helvetica-Light', padding: '10px',
                             },
+                            selection: true,
                         }}
                         actions={[
                             {
