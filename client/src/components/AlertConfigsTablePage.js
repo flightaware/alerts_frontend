@@ -32,7 +32,7 @@ export default class AlertConfigsTablePage extends Component {
 
         return (
             <div className="alert-config-page-wrapper">
-                <div className="alert-config-page-title">Alert Configurations</div>
+                <div className="alert-config-page-title">Alert Configurations Table</div>
                 <div className="table-wrapper">
                     <div className="alert-config-page-table-inner">
                         {!loading ?

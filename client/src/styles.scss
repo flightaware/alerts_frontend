@@ -127,6 +127,39 @@ body {
     width: 100%
 }
 
+// Styles for the Posted Alerts Info Page
+
+.posted-alerts-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.posted-alerts-page-title {
+    width: 100%;
+    text-align: center;
+    font-family: $Lato;
+    font-size: 36px;
+    color: $midnight-blue;
+    margin: 3rem 0;
+}
+
+.posted-alerts-page-table-inner {
+    grid-area: table;
+    height: 100%;
+    width: 100%;
+}
+
+.posted-alerts-table-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 460px;
+    width: 100%
+}
+
 // Material table styles
 
 .MuiToolbar-root {

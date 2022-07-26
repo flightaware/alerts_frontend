@@ -11,6 +11,7 @@ export default class AppNavbar extends Component {
                     <Nav className="ml-auto">
                         <Nav.Link href="/">Home</Nav.Link>
                         <Nav.Link href="/alert_configs">Alert Configurations</Nav.Link>
+                        <Nav.Link href="/posted_alerts">Posted Alerts</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
