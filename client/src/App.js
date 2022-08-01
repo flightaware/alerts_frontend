@@ -34,7 +34,7 @@ const App = () => {
             <Router>
                 <div className="app">
                     <div className="example-notification-bar justify-content-center d-flex">
-                        PLEASE NOTE: This webapp is purely an example of using the alerts capabilities of AeroAPI
+                        PLEASE NOTE: This webapp is purely a demonstration of AeroAPI alerting features
                         and best practices. It is not meant to be used in production.
                     </div>
                     <AppNavbar/>
