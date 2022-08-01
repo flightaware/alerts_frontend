@@ -105,25 +105,25 @@ export default class AlertConfigsTablePage extends Component {
                             title: "Aircraft Type", field: "aircraft_type",
                         }, /* Note: start/end date use the same variable format
                                      as SQL date column name for consistency */
-                            {
-                                title: "Start Date (M/D/Y)", field: "start_date",
-                            }, {
-                                title: "End Date (M/D/Y)", field: "end_date",
-                            }, {
-                                title: "Max Weekly", field: "max_weekly",
-                            }, {
-                                title: "ETA", field: "eta",
-                            }, {
-                                title: "Arrival", field: "arrival",
-                            }, {
-                                title: "Cancelled", field: "cancelled",
-                            }, {
-                                title: "Departure", field: "departure",
-                            }, {
-                                title: "Diverted", field: "diverted",
-                            }, {
-                                title: "Filed", field: "filed",
-                            }]}
+                        {
+                            title: "Start Date (M/D/Y)", field: "start_date",
+                        }, {
+                            title: "End Date (M/D/Y)", field: "end_date",
+                        }, {
+                            title: "Max Weekly", field: "max_weekly",
+                        }, {
+                            title: "ETA", field: "eta",
+                        }, {
+                            title: "Arrival", field: "arrival",
+                        }, {
+                            title: "Cancelled", field: "cancelled",
+                        }, {
+                            title: "Departure", field: "departure",
+                        }, {
+                            title: "Diverted", field: "diverted",
+                        }, {
+                            title: "Filed", field: "filed",
+                        }]}
                         data={data.map(alert => ({
                             fa_alert_id: alert.fa_alert_id,
                             ident: alert.ident,
