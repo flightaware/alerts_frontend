@@ -200,7 +200,7 @@ export default class CreateAlert extends Component {
                 <Container className="mt-3 d-flex justify-content-center align-items-center flex-column">
                     <h2>Create an Alert</h2>
                     <h3>
-                        NOTE: When getting triggered alerts, you MUST have your endpoint URL set.
+                        NOTE: In order to receive alerts, you MUST have your endpoint URL set.
                         Currently your endpoint is (you can see this at <a
                         href="https://flightaware.com/commercial/aeroapi/send.rvt">https://flightaware.com/commercial/aeroapi/send.rvt</a> when
                         signed in): {this.state.endpoint}
