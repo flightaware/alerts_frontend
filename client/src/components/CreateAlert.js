@@ -201,8 +201,7 @@ export default class CreateAlert extends Component {
                     <h2>Create an Alert</h2>
                     <h3>
                         NOTE: In order to receive alerts, you MUST have your endpoint URL set.
-                        Currently your endpoint is (you can see this at https://flightaware.com/commercial/aeroapi/send.rvt when
-                        signed in): {this.state.endpoint}
+                        Currently your endpoint is: {this.state.endpoint}
                     </h3>
                     <form onSubmit={this.handleSubmit}>
                         <div className="form-group">
