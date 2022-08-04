@@ -11,7 +11,7 @@ flight data from the Aero Apps alerts backend.
 
 FlightAware Alerts is a small webapp powered by a backend like the alerts-backend service in FlightAware Aero Apps.
 You can use it to enter in parameters to create an alert for your FlightAware account. In this webapp, the parameters
-that one can input are indent, origin, destination, the aircraft type, the start date of the alert, and the end date
+that one can input are ident, origin, destination, the aircraft type, the start date of the alert, and the end date
 of the alert.
 
 This service is intended to be run in the context of a service like the Aero Apps alerts section. The nginx proxy
