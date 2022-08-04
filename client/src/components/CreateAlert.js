@@ -9,6 +9,7 @@ export default class CreateAlert extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            endpoint: '',
             response: '',
             buttonDisabled: false,
             dateValid: true,
@@ -65,7 +66,7 @@ export default class CreateAlert extends Component {
             }
             // check if date is before today: if it is, API will reject
             let today = new Date();
-            today.setHours(0,0,0,0);
+            today.setHours(0, 0, 0, 0);
             if (date.getTime() < today.getTime()) {
                 this.setState({startDateTodayValid: false});
             } else {
@@ -95,7 +96,7 @@ export default class CreateAlert extends Component {
             }
             // check if date is before today: if it is, API will reject
             let today = new Date();
-            today.setHours(0,0,0,0);
+            today.setHours(0, 0, 0, 0);
             if (date.getTime() < today.getTime()) {
                 this.setState({endDateTodayValid: false});
             } else {
@@ -180,13 +181,28 @@ export default class CreateAlert extends Component {
             this.setState({response: error.data["Description"]});
         });
 
-    };
+    }
+
+    getEndpoint() {
+        axios.get("/api/endpoint").then(response => {
+            this.setState({endpoint: response.data["url"]});
+        });
+    }
+
+    componentDidMount() {
+        this.getEndpoint();
+    }
 
     render() {
+
         return (
             <div className="container m-3">
                 <Container className="mt-3 d-flex justify-content-center align-items-center flex-column">
                     <h2>Create an Alert</h2>
+                    <h3>
+                        NOTE: In order to receive alerts, you MUST have your endpoint URL set.
+                        Currently your endpoint is: {this.state.endpoint}
+                    </h3>
                     <form onSubmit={this.handleSubmit}>
                         <div className="form-group">
                             <label className="col-form-label">Ident:</label>

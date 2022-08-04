@@ -50,16 +50,23 @@ export default class AlertConfigsTablePage extends Component {
             }
         }).catch(error => {
             console.error("Error occurred in sending JSON payload to backend: " + error);
-            return error.data["Description"];
+            if (this.state.response === '') {
+                this.setState({response: error.data["Description"]});
+            } else {
+                let holder = this.state.response;
+                holder += error.data["Description"] + '\n';
+                this.setState({response: holder});
+            }
         });
     }
 
     deleteAlerts = (selected_alerts) => {
-        // Loop through selected alerts and delete
-        this.setState({response: ''});
-        for (const alert_config of selected_alerts) {
-            this.deleteAlertId(alert_config["fa_alert_id"]);
-        }
+        // Loop through all selected alerts and delete
+        this.setState({response: ''}, () => {
+            for (const alert_config of selected_alerts) {
+                this.deleteAlertId(alert_config["fa_alert_id"]);
+            }
+        });
     }
 
     render() {

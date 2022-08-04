@@ -83,6 +83,13 @@ body {
     text-align: center;
 }
 
+.example-notification-bar {
+    width: 100%;
+    padding: .5rem;
+    background-color: #00A0E2;
+    color: white;
+}
+
 // Styles for Home page for Creating Alerts
 
 .error-text {
@@ -125,12 +132,6 @@ body {
     align-items: center;
     height: 460px;
     width: 100%
-}
-
-.alert-config-delete-all-alerts-wrapper {
-    display: flex;
-    justify-content: center;
-    margin: 2rem;
 }
 
 // Styles for the Posted Alerts Info Page

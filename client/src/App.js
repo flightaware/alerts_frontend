@@ -33,12 +33,15 @@ const App = () => {
         <ThemeProvider theme={tableTheme}>
             <Router>
                 <div className="app">
+                    <div className="example-notification-bar justify-content-center d-flex">
+                        PLEASE NOTE: This webapp is purely a demonstration of AeroAPI alerting features
+                        and best practices. It is not meant to be used in production.
+                    </div>
                     <AppNavbar/>
                     <Switch>
                         <Route path={`/`} component={LandingPage} exact />
                         <Route path={`/alert_configs`} component={AlertConfigsTablePage} exact />
                         <Route path={`/posted_alerts`} component={PostedAlertsTablePage} exact />
-
                     </Switch>
                 </div>
             </Router>
