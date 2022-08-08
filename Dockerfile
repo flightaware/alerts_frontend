@@ -1,4 +1,4 @@
-FROM node:12.16-buster-slim as react-build
+FROM node:16.15-buster-slim as react-build
 
 WORKDIR /react
 COPY client .
