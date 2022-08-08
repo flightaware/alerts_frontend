@@ -2,6 +2,7 @@
   "name": "alerts_frontend",
   "version": "0.1.0",
   "private": true,
+  "//": "Note: install canvg, dompurify, and html2canvas because needed for update to material-table and node",
   "dependencies": {
     "@material-ui/core": "^4.9.7",
     "@testing-library/jest-dom": "^4.2.4",
