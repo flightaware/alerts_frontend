@@ -9,15 +9,18 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.27.2",
     "bootstrap": "^4.4.1",
+    "canvg": "^4.0.1",
+    "dompurify": "^2.3.10",
+    "html2canvas": "^1.4.1",
     "material-table": "^1.69.3",
-    "node-sass": "^7.0.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-datepicker": "^4.8.0",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
-    "react-table": "^7.0.0"
+    "react-table": "^7.0.0",
+    "sass": "^1.54.3"
   },
   "scripts": {
     "start": "PORT=3001 react-scripts start",
